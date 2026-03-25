@@ -50,7 +50,6 @@ const doctorSchema = new mongoose.Schema(
     timestamps: true
 }
 );
-
-const doctor = mongoose.model("doctor", doctorSchema);
-module.exports = doctor;
+const Doctor = mongoose.model("Doctor", doctorSchema);
+module.exports = Doctor;
  

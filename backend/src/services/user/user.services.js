@@ -1,53 +1,32 @@
 const User = require("../../models/user");
 
-const registerUser = async (data) => {
-
-  const user = await User.create(data);
-
-  return user;
+const registerUserDB = async (data) => {
+  return await User.create(data);
 };
 
-
-const findUserByEmail = async (email) => {
-
-  const user = await User.findOne({ email });
-
-  return user;
+const findUserByEmailDB = async (email) => {
+  return await User.findOne({ email });
 };
 
-
-const findUserById = async (id) => {
-
-  const user = await User.findById(id).select("-password");
-
-  return user;
+const findUserByIdDB = async (id) => {
+  return await User.findById(id);
 };
 
-
-const updateUser = async (id, data) => {
-
-  const user = await User.findByIdAndUpdate(
-    id,
-    data,
-    { new: true }
-  ).select("-password");
-
-  return user;
+const updateUserDB = async (id, data) => {
+  return await User.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true
+  });
 };
 
-
-const deleteUser = async (id) => {
-
-  const user = await User.findByIdAndDelete(id);
-
-  return user;
+const deleteUserDB = async (id) => {
+  return await User.findByIdAndDelete(id);
 };
-
 
 module.exports = {
-  registerUser,
-  findUserByEmail,
-  findUserById,
-  updateUser,
-  deleteUser
+  registerUserDB,
+  findUserByEmailDB,
+  findUserByIdDB,
+  updateUserDB,
+  deleteUserDB
 };

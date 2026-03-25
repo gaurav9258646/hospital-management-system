@@ -1,8 +1,8 @@
 const {
-  registerUser,
-  findUserByEmail,
-  updateUser,
-  deleteUser
+  registerUserDB,
+  findUserByEmailDB,
+  updateUserDB,
+  deleteUserDB
 } = require("../../services/user/user.services");
 
 const {
@@ -11,26 +11,21 @@ const {
   verifyPassword
 } = require("../../utils");
 
-
-
 // Register
 const register = async (req, res) => {
-
-  const { name, email, password, phone, address } = req.body;
-
-  console.log(req.body);
-
-  if (!name || !email || !password || !phone || !address) {
-    return res.status(400).json({
-      success: false,
-      error: "All fields required"
-    });
-  }
-
   try {
+    const { name, email, password, phone } = req.body;
 
-    // Check if user already exists
-    const existingUser = await findUserByEmail(email);
+    if (!name || !email || !password || !phone) {
+      return res.status(400).json({
+        success: false,
+        error: "All fields required"
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase();
+
+    const existingUser = await findUserByEmailDB(normalizedEmail);
 
     if (existingUser) {
       return res.status(400).json({
@@ -41,52 +36,38 @@ const register = async (req, res) => {
 
     const hashedPassword = await hashPassword(password);
 
-    const user = await registerUser({
+    const user = await registerUserDB({
       name,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       phone,
-      address,
       role: "patient"
     });
 
-    user.password = undefined;
+    const { password: _, ...safeUser } = user.toObject();
 
     return res.status(201).json({
       success: true,
-      message: "User registered successfully",
-      data: user
+      data: safeUser
     });
 
   } catch (error) {
-
-    console.log(error);
-
+    console.log("REGISTER ERROR 👉", error);
     return res.status(500).json({
       success: false,
       error: "Registration failed"
     });
-
   }
 };
 
 
-
-// Login
 const login = async (req, res) => {
-
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      error: "Email and password required"
-    });
-  }
-
   try {
+    const { email, password } = req.body;
 
-    const user = await findUserByEmail(email);
+    const normalizedEmail = email.toLowerCase();
+
+    const user = await findUserByEmailDB(normalizedEmail);
 
     if (!user) {
       return res.status(404).json({
@@ -109,82 +90,66 @@ const login = async (req, res) => {
       role: user.role
     });
 
-    user.password = undefined;
+    const { password: _, ...safeUser } = user.toObject();
 
     return res.status(200).json({
       success: true,
       data: {
-        user,
+        user: safeUser,
         accessToken,
         refreshToken
       }
     });
 
   } catch (error) {
-
-    console.log(error);
-
     return res.status(500).json({
       success: false,
       error: "Login failed"
     });
-
   }
 };
 
 
-
-// Update User
-const updateUserController = async (req, res) => {
-
+const updateUser = async (req, res) => {
   try {
-
     const { id } = req.params;
 
-    const user = await updateUser(id, req.body);
-
-    if (!user) {
-      return res.status(404).json({
+    if (req.user.id !== id && req.user.role !== "admin") {
+      return res.status(403).json({
         success: false,
-        error: "User not found"
+        error: "Unauthorized"
       });
     }
 
+    const user = await updateUserDB(id, req.body);
+
     return res.status(200).json({
       success: true,
-      message: "User updated",
       data: user
     });
 
   } catch (error) {
-
-    console.log(error);
-
     return res.status(500).json({
       success: false,
       error: "Update failed"
     });
-
   }
 };
 
 
-
-// Delete User
-const deleteUserController = async (req, res) => {
-
+// Delete
+const deleteUser = async (req, res) => {
   try {
-
     const { id } = req.params;
 
-    const user = await deleteUser(id);
-
-    if (!user) {
-      return res.status(404).json({
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
         success: false,
-        error: "User not found"
+        error: "Only admin can delete"
       });
     }
+
+    await deleteUserDB(id);
 
     return res.status(200).json({
       success: true,
@@ -192,20 +157,16 @@ const deleteUserController = async (req, res) => {
     });
 
   } catch (error) {
-
-    console.log(error);
-
     return res.status(500).json({
       success: false,
       error: "Delete failed"
     });
-
   }
 };
 
 module.exports = {
   register,
   login,
-  updateUserController,
-  deleteUserController
+  updateUser,
+  deleteUser
 };
