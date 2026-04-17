@@ -1,4 +1,13 @@
 import React, { useEffect, useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell
+} from "recharts";;
 
 const Home = () => {
   const [counts, setCounts] = useState({
@@ -7,6 +16,7 @@ const Home = () => {
     users: 0,
   });
 
+  const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,11 +41,21 @@ const Home = () => {
         const docData = docRes.ok ? await docRes.json() : { data: [] };
         const userData = userRes.ok ? await userRes.json() : { data: [] };
 
+        const appointments = appData.data || [];
+        const doctors = docData.data || [];
+        const users = userData.data || [];
+
         setCounts({
-          appointments: appData.data?.length || 0,
-          doctors: docData.data?.length || 0,
-          users: userData.data?.length || 0,
+          appointments: appointments.length,
+          doctors: doctors.length,
+          users: users.length,
         });
+
+        setChartData([
+          { name: "Appointments", total: appointments.length },
+          { name: "Doctors", total: doctors.length },
+          { name: "Users", total: users.length },
+        ]);
 
       } catch (error) {
         console.log("Dashboard Error:", error);
@@ -61,10 +81,8 @@ const Home = () => {
         Dashboard
       </h1>
 
-      {/* 🔹 Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
         
-        {/* Appointments */}
         <div className="bg-white p-5 rounded shadow hover:shadow-lg transition">
           <h2 className="text-gray-500 text-sm">Appointments</h2>
           <p className="text-2xl font-bold text-blue-600">
@@ -72,7 +90,6 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Doctors */}
         <div className="bg-white p-5 rounded shadow hover:shadow-lg transition">
           <h2 className="text-gray-500 text-sm">Doctors</h2>
           <p className="text-2xl font-bold text-green-600">
@@ -80,7 +97,6 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Users */}
         <div className="bg-white p-5 rounded shadow hover:shadow-lg transition">
           <h2 className="text-gray-500 text-sm">Users</h2>
           <p className="text-2xl font-bold text-purple-600">
@@ -89,6 +105,28 @@ const Home = () => {
         </div>
 
       </div>
+
+     <div className="bg-white p-4 rounded shadow h-[300px]">
+  <ResponsiveContainer width="100%" height="100%">
+    <BarChart data={chartData}>
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+
+      <Bar dataKey="total">
+        {chartData.map((entry, index) => {
+          const colors = [
+            "#3b82f6", 
+            "#10b981", 
+            "#8b5cf6", 
+          ];
+          return <Cell key={index} fill={colors[index]} />;
+        })}
+      </Bar>
+
+    </BarChart>
+  </ResponsiveContainer>
+</div>
     </div>
   );
 };

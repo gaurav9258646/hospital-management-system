@@ -5,26 +5,31 @@ import Doctors from "./admin/pages/Doctors";
 import Login from "./admin/pages/Login";
 import AdminProtected from "./context/AdminProtected";
 import AdminLayout from "./admin/AdminLayout";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
-    <Routes>
-      {/* Login */}
-      <Route path="/" element={<Login />} />
+    <>
+      <Toaster position="top-right" />
 
-      {/* Protected Layout */}
-      <Route
-        path="/"
-        element={
-          <AdminProtected>
-            <AdminLayout />
-          </AdminProtected>
-        }
-      >
-        <Route path="home" element={<Home />} />
-        <Route path="doctors" element={<Doctors />} />
-      </Route>
-    </Routes>
+      <Routes>
+        {/* Login */}
+        <Route path="/" element={<Login />} />
+
+        {/* Protected Layout */}
+        <Route
+          path="/"
+          element={
+            <AdminProtected>
+              <AdminLayout />
+            </AdminProtected>
+          }
+        >
+          <Route path="home" element={<Home />} />
+          <Route path="doctors" element={<Doctors />} />
+        </Route>
+      </Routes>
+    </>
   );
 };
 
