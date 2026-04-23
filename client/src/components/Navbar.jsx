@@ -9,7 +9,7 @@ import {
   X
 } from "lucide-react";
 
-import logo from "../assets/logo.png"; // ✅ logo import
+import logo from "../assets/logo.png";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -22,57 +22,77 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-white shadow-md px-4 md:px-6 py-2 flex justify-between items-center">
+    <>
+      <div className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
 
-      <div className="flex items-center gap-2">
-        <img
-          src={logo}
-          alt="logo"
-          className="h-10 md:h-12 object-contain"
-        />
-      </div>
+        <div className="flex justify-between items-center px-4 md:px-6 py-2">
 
-      <div className="hidden md:flex items-center gap-6 text-gray-700">
+          <div className="flex items-center gap-2 cursor-pointer"
+               onClick={() => navigate("/")}>
+            <img src={logo} alt="logo" className="h-10 md:h-12 object-contain" />
+          </div>
 
-        <Link to="/" className="flex items-center gap-1 hover:text-blue-600">
-          <Home size={18}/> Home
-        </Link>
+          <div className="hidden md:flex items-center gap-6 text-gray-700">
 
-        <Link to="/doctors" className="flex items-center gap-1 hover:text-blue-600">
-          <Users size={18}/> Doctors
-        </Link>
+            <Link to="/" className="flex items-center gap-1 hover:text-blue-600">
+              <Home size={18}/> Home
+            </Link>
 
-        {!token ? (
-          <Link to="/login" className="flex items-center gap-1 hover:text-blue-600">
-            <LogIn size={18}/> Login
-          </Link>
-        ) : (
-          <button onClick={handleLogout} className="flex items-center gap-1 text-red-500">
-            <LogOut size={18}/> Logout
+            <Link to="/doctors" className="flex items-center gap-1 hover:text-blue-600">
+              <Users size={18}/> Doctors
+            </Link>
+
+            {!token ? (
+              <>
+                <Link to="/login" className="flex items-center gap-1 hover:text-blue-600">
+                  <LogIn size={18}/> Login
+                </Link>
+
+                <Link
+                  to="/signup"
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                >
+                  Signup
+                </Link>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1 text-red-500"
+              >
+                <LogOut size={18}/> Logout
+              </button>
+            )}
+
+          </div>
+
+          <button className="md:hidden" onClick={() => setOpen(!open)}>
+            {open ? <X /> : <Menu />}
           </button>
-        )}
-
-      </div>
-
-      <button className="md:hidden" onClick={() => setOpen(!open)}>
-        {open ? <X /> : <Menu />}
-      </button>
-
-      {open && (
-        <div className="absolute top-[60px] left-0 w-full bg-white shadow-md flex flex-col items-center gap-4 py-4 md:hidden z-50">
-
-          <Link to="/" onClick={()=>setOpen(false)}>Home</Link>
-          <Link to="/doctors" onClick={()=>setOpen(false)}>Doctors</Link>
-
-          {!token ? (
-            <Link to="/login" onClick={()=>setOpen(false)}>Login</Link>
-          ) : (
-            <button onClick={handleLogout}>Logout</button>
-          )}
 
         </div>
-      )}
-    </div>
+
+        {open && (
+          <div className="md:hidden bg-white shadow-md flex flex-col items-center gap-4 py-4">
+
+            <Link to="/" onClick={()=>setOpen(false)}>Home</Link>
+            <Link to="/doctors" onClick={()=>setOpen(false)}>Doctors</Link>
+
+            {!token ? (
+              <>
+                <Link to="/login" onClick={()=>setOpen(false)}>Login</Link>
+                <Link to="/signup" onClick={()=>setOpen(false)}>Signup</Link>
+              </>
+            ) : (
+              <button onClick={handleLogout}>Logout</button>
+            )}
+
+          </div>
+        )}
+      </div>
+
+      <div className="h-[70px]"></div>
+    </>
   );
 };
 

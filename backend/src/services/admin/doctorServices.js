@@ -7,9 +7,8 @@ const createDoctorDB = async (data) => {
 
 // GET ALL
 const getAllDoctorsDB = async () => {
-    return await Doctor.find().populate("userId");
+  return await Doctor.find().populate("userId");
 };
-
 // GET ONE
 const getDoctorByIdDB = async (id) => {
     return await Doctor.findById(id).populate("userId");

@@ -6,11 +6,12 @@ const Doctors = () => {
     name: "",
     email: "",
     password: "",
-    phone: "", 
+    phone: "",
     specialization: "",
     department: "",
     experience: "",
     fees: "",
+    image: null // 🔥 add
   });
 
   const url = import.meta.env.VITE_SERVER_URL;
@@ -29,15 +30,21 @@ const Doctors = () => {
     }
   };
 
+  // 🔥 ADD DOCTOR (FormData)
   const handleAddDoctor = async () => {
     try {
+      const formData = new FormData();
+
+      Object.keys(form).forEach((key) => {
+        formData.append(key, form[key]);
+      });
+
       const res = await fetch(`${url}/doctor`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(form),
+        body: formData, 
       });
 
       const data = await res.json();
@@ -45,6 +52,8 @@ const Doctors = () => {
       if (!data.success) {
         return alert(data.error);
       }
+
+      alert("Doctor Added ");
 
       fetchDoctors();
 
@@ -57,6 +66,7 @@ const Doctors = () => {
         department: "",
         experience: "",
         fees: "",
+        image: null
       });
 
     } catch (error) {
@@ -87,6 +97,7 @@ const Doctors = () => {
         <h2 className="font-bold mb-3">Add Doctor</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
           <input placeholder="Name" className="border p-2"
             value={form.name}
             onChange={(e)=>setForm({...form,name:e.target.value})}
@@ -126,6 +137,13 @@ const Doctors = () => {
             value={form.fees}
             onChange={(e)=>setForm({...form,fees:e.target.value})}
           />
+
+          <input
+            type="file"
+            className="border p-2"
+            onChange={(e)=>setForm({...form,image:e.target.files[0]})}
+          />
+
         </div>
 
         <button
@@ -140,6 +158,7 @@ const Doctors = () => {
         <table className="w-full text-center">
           <thead className="bg-gray-100">
             <tr>
+              <th>Image</th>
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
@@ -154,9 +173,17 @@ const Doctors = () => {
           <tbody>
             {doctors.map((doc) => (
               <tr key={doc._id} className="border-t">
+
+                <td>
+                  <img
+                    src={doc.profileImage || "https://via.placeholder.com/50"}
+                    className="w-10 h-10 rounded-full object-cover mx-auto"
+                  />
+                </td>
+
                 <td>{doc.userId?.name}</td>
                 <td>{doc.userId?.email}</td>
-                <td>{doc.userId?.phone}</td> 
+                <td>{doc.userId?.phone}</td>
                 <td>{doc.specialization}</td>
                 <td>{doc.department}</td>
                 <td>{doc.experience}</td>
@@ -170,6 +197,7 @@ const Doctors = () => {
                     Delete
                   </button>
                 </td>
+
               </tr>
             ))}
           </tbody>

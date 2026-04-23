@@ -21,6 +21,7 @@ const createDoctor = async (req, res) => {
             experience,
             fees
         } = req.body;
+        const imageUrl = req.file ? req.file.path : "";
 
 
         if (!name || !email || !password) {
@@ -53,7 +54,8 @@ const createDoctor = async (req, res) => {
             specialization,
             department,
             experience,
-            fees
+            fees,
+            profileImage: imageUrl 
         });
 
         return res.status(201).json({

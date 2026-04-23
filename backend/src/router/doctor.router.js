@@ -11,8 +11,10 @@ const {
     updateDoctor,
     deleteDoctor
 } = require("../controllers/admin/doctorController");
+const upload = require("../Middleware/upload");
 
-router.post("/", authMiddleware, authorize("admin"), createDoctor);
+
+router.post("/", authMiddleware, authorize("admin"), upload.single("image"), createDoctor);
 
 router.get("/", getAllDoctors);
 
