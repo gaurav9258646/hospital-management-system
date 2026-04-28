@@ -6,6 +6,7 @@ import Login from "./admin/pages/Login";
 import AdminProtected from "./context/AdminProtected";
 import AdminLayout from "./admin/AdminLayout";
 import { Toaster } from "react-hot-toast";
+import Appointments from "./admin/pages/Appointments";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         >
           <Route path="home" element={<Home />} />
           <Route path="doctors" element={<Doctors />} />
+          <Route path="appointments" element={<Appointments />} />
         </Route>
       </Routes>
     </>

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: "",
     password: ""
   });
-
-  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -24,7 +24,7 @@ const Login = () => {
       const data = await res.json();
 
       if (!data.success) {
-        return alert("Login Failed ");
+        return alert("Login failed");
       }
 
       localStorage.setItem("token", data.data.accessToken);
@@ -40,16 +40,28 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded shadow w-[320px]">
 
-        <h1 className="text-xl font-bold mb-4 text-center">Login</h1>
+      <div className="bg-white p-6 rounded shadow w-[300px]">
 
-        <input placeholder="Email" className="border p-2 w-full mb-2"
-          onChange={(e)=>setForm({...form,email:e.target.value})}
+        <h2 className="text-xl font-bold mb-4 text-center">
+          Login
+        </h2>
+
+        <input
+          placeholder="Email"
+          className="border p-2 w-full mb-2"
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
         />
 
-        <input type="password" placeholder="Password" className="border p-2 w-full mb-3"
-          onChange={(e)=>setForm({...form,password:e.target.value})}
+        <input
+          type="password"
+          placeholder="Password"
+          className="border p-2 w-full mb-3"
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
         />
 
         <button

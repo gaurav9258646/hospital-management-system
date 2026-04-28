@@ -27,7 +27,7 @@ const createDoctor = async (req, res) => {
         if (!name || !email || !password) {
             return res.status(400).json({
                 success: false,
-                error: "Name, email, password required"
+                error: "All feilds are required"
             });
         }
 
@@ -35,7 +35,7 @@ const createDoctor = async (req, res) => {
         if (existing) {
             return res.status(400).json({
                 success: false,
-                error: "User already exists"
+                error: "Email already exist"
             });
         }
 

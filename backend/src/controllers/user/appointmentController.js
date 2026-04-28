@@ -1,12 +1,17 @@
-const { createAppointmentDB,
+const {
+  createAppointmentDB,
   getAppointmentByIdDB,
   getAppointmentsByPatientDB,
   getAppointmentsByDoctorDB,
   updateAppointmentDB,
   deleteAppointmentDB,
   getAllAppointmentsDB,
-  isSlotAvailable} = require("../../services/user/appointmentServices");
-const  createAppointment = async (req, res) => {
+  isSlotAvailable
+} = require("../../services/user/appointmentServices");
+
+const Doctor = require("../../models/doctor");
+
+const createAppointment = async (req, res) => {
   try {
     const { doctorId, date, time, reason } = req.body;
     const patientId = req.user.id;
@@ -15,6 +20,15 @@ const  createAppointment = async (req, res) => {
       return res.status(400).json({
         success: false,
         error: "doctorId, date and time are required"
+      });
+    }
+
+    const doctor = await Doctor.findById(doctorId);
+
+    if (!doctor) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid doctorId"
       });
     }
 
@@ -37,15 +51,16 @@ const  createAppointment = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Appointment booked",
+      message: "Appointment booked successfully",
       data: appointment
     });
 
   } catch (error) {
-    console.log(error);
+    console.log("BOOKING ERROR:", error);
+
     return res.status(500).json({
       success: false,
-      error: "Failed to create appointment"
+      error: error.message || "Failed to create appointment"
     });
   }
 };
@@ -60,6 +75,8 @@ const getAllAppointments = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
       error: "Failed to fetch appointments"
@@ -86,6 +103,8 @@ const getAppointment = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
       error: "Error fetching appointment"
@@ -93,7 +112,7 @@ const getAppointment = async (req, res) => {
   }
 };
 
-const updateAppointment= async (req, res) => {
+const updateAppointment = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -108,11 +127,13 @@ const updateAppointment= async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Appointment updated",
+      message: "Appointment updated successfully",
       data: appointment
     });
 
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
       error: "Update failed"
@@ -135,10 +156,12 @@ const deleteAppointment = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Appointment deleted"
+      message: "Appointment deleted successfully"
     });
 
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
       error: "Delete failed"

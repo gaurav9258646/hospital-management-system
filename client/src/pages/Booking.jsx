@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Calendar,
   Clock,
@@ -9,9 +9,20 @@ import {
 
 const Booking = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [doctor, setDoctor] = useState(null);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first");
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     fetchDoctor();
@@ -72,6 +83,7 @@ const Booking = () => {
 
       <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow">
 
+        {/* DOCTOR INFO */}
         <div className="text-center mb-5">
 
           <img
@@ -91,6 +103,7 @@ const Booking = () => {
 
         </div>
 
+        {/* DATE */}
         <div className="mb-4">
           <label className="flex items-center gap-2 mb-1">
             <Calendar size={16}/> Select Date
@@ -103,6 +116,7 @@ const Booking = () => {
           />
         </div>
 
+        {/* TIME */}
         <div className="mb-4">
           <label className="flex items-center gap-2 mb-1">
             <Clock size={16}/> Select Time
@@ -120,7 +134,6 @@ const Booking = () => {
           </select>
         </div>
 
-        {/* 🔥 Button */}
         <button
           onClick={handleBooking}
           className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg flex items-center justify-center gap-2"

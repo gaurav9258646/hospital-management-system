@@ -1,4 +1,4 @@
-const  Appointment = require("../../models/appointment");
+const Appointment = require("../../models/appointment");
 
 const createAppointmentDB = async (data) => {
   return await Appointment.create(data);
@@ -7,18 +7,36 @@ const createAppointmentDB = async (data) => {
 const getAllAppointmentsDB = async () => {
   return await Appointment.find()
     .populate("patientId", "name email")
-    .populate("doctorId", "name specialization");
+    .populate({
+      path: "doctorId",
+      populate: {
+        path: "userId",
+        select: "name email"
+      }
+    });
 };
 
 const getAppointmentByIdDB = async (id) => {
   return await Appointment.findById(id)
     .populate("patientId", "name email")
-    .populate("doctorId", "name specialization");
+    .populate({
+      path: "doctorId",
+      populate: {
+        path: "userId",
+        select: "name email"
+      }
+    });
 };
 
 const getAppointmentsByPatientDB = async (patientId) => {
   return await Appointment.find({ patientId })
-    .populate("doctorId", "name specialization");
+    .populate({
+      path: "doctorId",
+      populate: {
+        path: "userId",
+        select: "name"
+      }
+    });
 };
 
 const getAppointmentsByDoctorDB = async (doctorId) => {
