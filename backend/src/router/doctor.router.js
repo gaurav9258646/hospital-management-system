@@ -9,7 +9,7 @@ const {
     getAllDoctors,
     getDoctor,
     updateDoctor,
-    deleteDoctor
+    deleteDoctor,
 } = require("../controllers/admin/doctorController");
 const upload = require("../Middleware/upload");
 

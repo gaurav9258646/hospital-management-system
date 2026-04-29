@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, LogOut, Bell, UserCircle2 } from "lucide-react";
+import AdminProfile from "../pages/AdminProfile"; 
 
 const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
@@ -35,10 +36,14 @@ const Navbar = ({ toggleSidebar }) => {
           <Bell size={18} />
         </button>
 
-        <div className="hidden md:flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">
+        {/* Profile Button */}
+        <button
+          onClick={() => navigate("/profile")}
+          className="hidden md:flex items-center gap-2 bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-xl border border-gray-100 transition"
+        >
           <UserCircle2 size={22} />
-          <span className="text-sm font-medium text-gray-700">Admin</span>
-        </div>
+          <span className="text-sm font-medium text-gray-700">Profile</span>
+        </button>
 
         <button
           onClick={handleLogout}

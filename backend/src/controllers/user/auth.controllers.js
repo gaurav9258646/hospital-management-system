@@ -3,7 +3,8 @@ const {
   findUserByEmailDB,
   updateUserDB,
   getAllUsersDB,
-  deleteUserDB
+  deleteUserDB,
+  getProfileDB
 } = require("../../services/user/user.services");
 
 const {
@@ -11,6 +12,7 @@ const {
   hashPassword,
   verifyPassword
 } = require("../../utils");
+
 
 // Register
 const register = async (req, res) => {
@@ -53,7 +55,6 @@ const register = async (req, res) => {
     });
 
   } catch (error) {
-    console.log("REGISTER ERROR 👉", error);
     return res.status(500).json({
       success: false,
       error: "Registration failed"
@@ -62,6 +63,7 @@ const register = async (req, res) => {
 };
 
 
+// Login
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -136,6 +138,8 @@ const updateUser = async (req, res) => {
     });
   }
 };
+
+
 const getAllUsers = async (req, res) => {
   try {
     const users = await getAllUsersDB();
@@ -155,7 +159,26 @@ const getAllUsers = async (req, res) => {
 };
 
 
-// Delete
+const getProfile = async (req, res) => {
+  try {
+    const user = await getProfileDB(req.user.id);
+
+    return res.status(200).json({
+      success: true,
+      data: user
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      error: "Profile fetch failed"
+    });
+  }
+};
+
+
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -187,5 +210,6 @@ module.exports = {
   login,
   updateUser,
   deleteUser,
-  getAllUsers
+  getAllUsers,
+  getProfile
 };

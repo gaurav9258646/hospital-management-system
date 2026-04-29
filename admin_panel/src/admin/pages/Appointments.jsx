@@ -68,7 +68,6 @@ const Appointments = () => {
           </div>
         </div>
 
-        {/* Table */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="max-h-[550px] overflow-y-auto overflow-x-auto">
             <table className="w-full min-w-[1000px] text-center">

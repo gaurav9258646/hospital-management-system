@@ -25,6 +25,10 @@ const deleteUserDB = async (id) => {
 const getAllUsersDB = async () => {
   return await User.find();
 };
+const getProfileDB = async (id) => {
+  return await User.findById(id).select("-password");
+};
+
 
 module.exports = {
   registerUserDB,
@@ -32,5 +36,6 @@ module.exports = {
   findUserByIdDB,
   updateUserDB,
   deleteUserDB,
-  getAllUsersDB
+  getAllUsersDB,
+  getProfileDB,
 };

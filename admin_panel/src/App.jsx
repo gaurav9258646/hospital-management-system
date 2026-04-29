@@ -9,6 +9,7 @@ import Login from "./admin/pages/Login";
 
 import AdminProtected from "./context/AdminProtected";
 import AdminLayout from "./admin/AdminLayout";
+import AdminProfile from "./admin/pages/AdminProfile";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/appointments" element={<Appointments />} />
+           <Route path="profile" element={<AdminProfile />} /> 
         </Route>
       </Routes>
     </>
