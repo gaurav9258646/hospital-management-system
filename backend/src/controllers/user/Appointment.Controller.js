@@ -17,6 +17,8 @@ const createAppointment = async (req, res) => {
   try {
     const { doctorId, date, time, reason } = req.body;
     const patientId = req.user.id;
+    console.log("Appointment Request:", req.body);
+    console.log("Logged-in User:", req.user);
 
     if (!doctorId || !date || !time) {
       return res.status(400).json({

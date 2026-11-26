@@ -1,25 +1,33 @@
+
 const Doctor = require("../../models/doctor");
 
-// CREATE
 const createDoctorDB = async (data) => {
     return await Doctor.create(data);
 };
 
-// GET ALL
 const getAllDoctorsDB = async () => {
-  return await Doctor.find().populate("userId");
+    return await Doctor.find()
+        .populate("userId", "name email phone role")
+        .sort({ createdAt: -1 });
 };
-// GET ONE
+
 const getDoctorByIdDB = async (id) => {
-    return await Doctor.findById(id).populate("userId");
+    return await Doctor.findById(id)
+        .populate("userId", "name email phone role");
 };
 
-// UPDATE
 const updateDoctorDB = async (id, data) => {
-    return await Doctor.findByIdAndUpdate(id, data, { new: true });
+    return await Doctor.findByIdAndUpdate(
+        id,
+        data,
+        {
+            new: true,
+            runValidators: true
+        }
+    ).populate("userId", "name email phone role");
 };
 
-// DELETE
+// DELETE DOCTOR
 const deleteDoctorDB = async (id) => {
     return await Doctor.findByIdAndDelete(id);
 };
