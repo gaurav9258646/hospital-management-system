@@ -6,8 +6,6 @@ const doctorRoutes = require("./router/Doctor.route");
 const prescriptionRoutes = require("./router/Prescription.routes")
 const GalleryRouter = require("./router/Gallery.routes")
 
-
-
 const app = express();
 app.use(cors());
 
